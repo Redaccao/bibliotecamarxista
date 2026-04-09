@@ -1,0 +1,2547 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Servir ao Povo — Biblioteca Marxista</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --vermelho: #C40000;
+  --vermelho-escuro: #8B0000;
+  --vermelho-hover: #a30000;
+  --amarelo: #FFD700;
+  --creme: #FAF8F3;
+  --creme-escuro: #F0EDE4;
+  --texto: #111111;
+  --texto-sec: #555555;
+  --cinza-claro: #E8E4DC;
+  --borda: #DDD8CC;
+  --branco: #FFFFFF;
+  --sombra: rgba(0,0,0,0.08);
+  --sombra-forte: rgba(0,0,0,0.18);
+  --transicao: 0.22s ease;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Source Serif 4', Georgia, serif;
+  background: var(--creme);
+  color: var(--texto);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--creme-escuro); }
+::-webkit-scrollbar-thumb { background: var(--cinza-claro); border-radius: 3px; }
+
+/* ── HEADER ── */
+#header {
+  background: var(--vermelho);
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+  transition: padding var(--transicao);
+}
+
+#header.compact .header-top { padding: 7px 0; }
+#header.compact .logo-titulo { font-size: 1.05rem; }
+#header.compact .logo-sub { display: none; }
+
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 0;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-left: 20px;
+  padding-right: 20px;
+  transition: padding var(--transicao);
+}
+
+.logo-wrap { display: flex; align-items: center; gap: 12px; cursor: pointer; text-decoration: none; }
+
+.logo-estrela {
+  width: 38px; height: 38px;
+  background: var(--amarelo);
+  clip-path: polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+.logo-wrap:hover .logo-estrela { transform: rotate(15deg) scale(1.05); }
+
+.logo-texto { color: white; }
+.logo-titulo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1.1;
+}
+.logo-sub {
+  font-family: 'Source Serif 4', serif;
+  font-size: 0.6rem;
+  font-weight: 300;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.8;
+  margin-top: 2px;
+}
+
+.header-acoes { display: flex; align-items: center; gap: 8px; }
+
+.btn-icon {
+  background: rgba(255,255,255,0.12);
+  border: none;
+  color: white;
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background var(--transicao);
+}
+.btn-icon:hover { background: rgba(255,255,255,0.22); }
+.btn-icon svg { width: 18px; height: 18px; fill: none; stroke: white; stroke-width: 2; stroke-linecap: round; }
+
+/* ── NAV ── */
+.nav-wrap {
+  border-top: 1px solid rgba(255,255,255,0.18);
+  background: var(--vermelho-escuro);
+}
+nav {
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 12px;
+}
+nav::-webkit-scrollbar { display: none; }
+
+nav button {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.72);
+  font-family: 'Source Serif 4', serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 10px 14px;
+  white-space: nowrap;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all var(--transicao);
+  position: relative;
+}
+nav button:hover { color: rgba(255,255,255,0.9); }
+nav button.ativo { color: white; border-bottom-color: var(--amarelo); }
+
+/* ── PESQUISA OVERLAY ── */
+#pesquisaOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.65);
+  z-index: 300;
+  display: none;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 80px;
+  backdrop-filter: blur(3px);
+}
+#pesquisaOverlay.aberto { display: flex; }
+
+.pesquisa-box {
+  background: white;
+  width: 100%;
+  max-width: 680px;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+  overflow: hidden;
+  animation: slideDown 0.22s ease;
+}
+@keyframes slideDown { from { opacity:0; transform: translateY(-16px); } to { opacity:1; transform: translateY(0); } }
+
+.pesquisa-input-wrap {
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  border-bottom: 1px solid var(--borda);
+  gap: 12px;
+}
+.pesquisa-input-wrap svg { width: 20px; height: 20px; fill: none; stroke: var(--texto-sec); stroke-width: 2; flex-shrink: 0; }
+
+#pesquisaInput {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-family: 'Source Serif 4', serif;
+  font-size: 1.05rem;
+  padding: 18px 0;
+  background: transparent;
+  color: var(--texto);
+}
+#pesquisaInput::placeholder { color: #aaa; }
+
+.pesquisa-fechar {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--texto-sec);
+  font-size: 1.3rem;
+  padding: 4px;
+  line-height: 1;
+}
+
+.pesquisa-resultados { max-height: 420px; overflow-y: auto; }
+.pesquisa-sugestoes { padding: 14px 20px; }
+.pesquisa-label {
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--texto-sec);
+  margin-bottom: 10px;
+}
+.pesquisa-chip {
+  display: inline-block;
+  background: var(--creme-escuro);
+  border: 1px solid var(--borda);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  margin: 3px;
+  transition: all var(--transicao);
+  color: var(--texto-sec);
+}
+.pesquisa-chip:hover { background: var(--vermelho); color: white; border-color: var(--vermelho); }
+
+.pesquisa-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 20px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--borda);
+  transition: background var(--transicao);
+}
+.pesquisa-item:hover { background: var(--creme); }
+.pesquisa-item-cat {
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: var(--vermelho);
+  color: white;
+  padding: 2px 7px;
+  border-radius: 3px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.pesquisa-item-titulo { font-size: 0.92rem; color: var(--texto); line-height: 1.35; }
+.pesquisa-item-meta { font-size: 0.75rem; color: var(--texto-sec); margin-top: 2px; }
+.pesquisa-vazio { padding: 40px 20px; text-align: center; color: var(--texto-sec); font-size: 0.9rem; }
+
+/* ── FILTROS AVANÇADOS PESQUISA ── */
+.pesquisa-filtros {
+  padding: 10px 20px 14px;
+  border-top: 1px solid var(--borda);
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.filtro-select {
+  font-family: 'Source Serif 4', serif;
+  font-size: 0.78rem;
+  border: 1px solid var(--borda);
+  border-radius: 6px;
+  padding: 5px 10px;
+  background: white;
+  color: var(--texto);
+  cursor: pointer;
+}
+
+/* ── CAROUSEL ── */
+.carousel-section {
+  background: var(--texto);
+  position: relative;
+  overflow: hidden;
+}
+.carousel-track { display: flex; transition: transform 0.45s cubic-bezier(0.25,0.46,0.45,0.94); }
+.carousel-slide {
+  min-width: 100%;
+  position: relative;
+  cursor: pointer;
+}
+.carousel-slide::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(196,0,0,0.75) 0%, rgba(17,17,17,0.55) 100%);
+  z-index: 1;
+}
+.carousel-inner {
+  position: relative;
+  z-index: 2;
+  padding: 32px 24px 56px;
+  max-width: 800px;
+}
+.carousel-badge {
+  display: inline-block;
+  background: var(--amarelo);
+  color: var(--texto);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 3px 9px;
+  margin-bottom: 12px;
+}
+.carousel-titulo {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.3rem, 4vw, 1.9rem);
+  color: white;
+  line-height: 1.25;
+  margin-bottom: 10px;
+}
+.carousel-excerto {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.72);
+  line-height: 1.55;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  max-width: 560px;
+}
+.carousel-meta { margin-top: 14px; font-size: 0.72rem; color: rgba(255,255,255,0.5); letter-spacing: 0.05em; }
+
+.carousel-ctrl {
+  position: absolute;
+  bottom: 18px;
+  left: 24px;
+  right: 24px;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.carousel-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.3);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.carousel-dot.ativo { background: white; width: 22px; border-radius: 3px; }
+
+.carousel-btn {
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: white;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s;
+  margin-left: auto;
+}
+.carousel-btn:hover { background: rgba(255,255,255,0.22); }
+
+/* ── MAIN ── */
+.main-wrap { max-width: 1200px; margin: 0 auto; padding: 28px 20px 60px; }
+
+/* ── FILTROS RÁPIDOS ── */
+.filtros-rapidos {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+  align-items: center;
+}
+.filtro-btn {
+  background: var(--branco);
+  border: 1px solid var(--borda);
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-family: 'Source Serif 4', serif;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all var(--transicao);
+  color: var(--texto-sec);
+}
+.filtro-btn:hover { border-color: var(--vermelho); color: var(--vermelho); }
+.filtro-btn.ativo { background: var(--vermelho); color: white; border-color: var(--vermelho); }
+
+.ordem-select {
+  margin-left: auto;
+  font-family: 'Source Serif 4', serif;
+  font-size: 0.78rem;
+  border: 1px solid var(--borda);
+  border-radius: 6px;
+  padding: 5px 10px;
+  background: white;
+  color: var(--texto);
+  cursor: pointer;
+}
+
+/* ── SECTION HEADER ── */
+.secao-titulo {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--texto-sec);
+  border-bottom: 1px solid var(--borda);
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.secao-titulo::before {
+  content: '';
+  display: block;
+  width: 4px; height: 16px;
+  background: var(--vermelho);
+  flex-shrink: 0;
+}
+
+/* ── GRID ARTIGOS ── */
+.artigos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+/* ── CARD ── */
+.card {
+  background: var(--branco);
+  border: 1px solid var(--borda);
+  border-radius: 6px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all var(--transicao);
+  display: flex;
+  flex-direction: column;
+}
+.card:hover { box-shadow: 0 6px 24px var(--sombra-forte); transform: translateY(-2px); border-color: #ccc; }
+
+.card-thumb {
+  width: 100%;
+  height: 140px;
+  background: linear-gradient(135deg, var(--vermelho-escuro), #2a0000);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  position: relative;
+  overflow: hidden;
+}
+.card-thumb-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.5));
+}
+
+.card-body { padding: 18px 18px 14px; flex: 1; display: flex; flex-direction: column; }
+
+.card-cat {
+  display: inline-block;
+  background: var(--creme-escuro);
+  color: var(--vermelho);
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 3px;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.card-titulo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.0rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--texto);
+  margin-bottom: 8px;
+  flex: 1;
+}
+
+.card-excerto {
+  font-size: 0.82rem;
+  color: var(--texto-sec);
+  line-height: 1.55;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 12px;
+  border-top: 1px solid var(--cinza-claro);
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.card-meta { font-size: 0.72rem; color: var(--texto-sec); }
+
+.card-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+.card-tag {
+  background: var(--creme-escuro);
+  border: 1px solid var(--borda);
+  color: var(--texto-sec);
+  font-size: 0.65rem;
+  padding: 2px 7px;
+  border-radius: 3px;
+  letter-spacing: 0.04em;
+}
+
+.card-tipo {
+  font-size: 1.1rem;
+  position: absolute;
+  bottom: 8px;
+  right: 10px;
+  z-index: 1;
+}
+
+/* Skeleton */
+.skeleton {
+  background: linear-gradient(90deg, var(--creme-escuro) 25%, var(--cinza-claro) 50%, var(--creme-escuro) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: 4px;
+}
+@keyframes shimmer { 0%{background-position:200%} 100%{background-position:-200%} }
+
+/* ── PAGINAÇÃO ── */
+.paginacao {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 40px;
+  flex-wrap: wrap;
+}
+.pag-btn {
+  width: 36px; height: 36px;
+  border: 1px solid var(--borda);
+  background: white;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: 'Source Serif 4', serif;
+  font-size: 0.85rem;
+  color: var(--texto-sec);
+  transition: all var(--transicao);
+  display: flex; align-items: center; justify-content: center;
+}
+.pag-btn:hover { border-color: var(--vermelho); color: var(--vermelho); }
+.pag-btn.ativo { background: var(--vermelho); color: white; border-color: var(--vermelho); }
+
+/* ── ARTIGO VIEW ── */
+#artigoView {
+  display: none;
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 28px 20px 60px;
+}
+#artigoView.aberto { display: block; }
+
+.artigo-voltar {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--vermelho);
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  margin-bottom: 24px;
+  background: none;
+  border: none;
+  font-family: 'Source Serif 4', serif;
+  padding: 0;
+}
+.artigo-voltar:hover { text-decoration: underline; }
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.75rem;
+  color: var(--texto-sec);
+  margin-bottom: 14px;
+}
+.breadcrumb span { color: var(--vermelho); cursor: pointer; }
+.breadcrumb span:hover { text-decoration: underline; }
+
+.artigo-container {
+  background: white;
+  border: 1px solid var(--borda);
+  border-radius: 6px;
+  padding: 40px;
+}
+
+.artigo-cat {
+  display: inline-block;
+  background: var(--vermelho);
+  color: white;
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  margin-bottom: 18px;
+}
+
+.artigo-titulo {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.5rem, 4vw, 2.2rem);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--texto);
+  margin-bottom: 18px;
+}
+
+.artigo-meta {
+  display: flex;
+  gap: 18px;
+  font-size: 0.78rem;
+  color: var(--texto-sec);
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--borda);
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.artigo-meta-item { display: flex; align-items: center; gap: 5px; }
+
+.artigo-acoes {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+  flex-wrap: wrap;
+}
+
+.btn-acao {
+  background: var(--creme-escuro);
+  border: 1px solid var(--borda);
+  border-radius: 4px;
+  padding: 5px 12px;
+  font-size: 0.72rem;
+  cursor: pointer;
+  font-family: 'Source Serif 4', serif;
+  color: var(--texto-sec);
+  transition: all var(--transicao);
+  display: flex; align-items: center; gap: 5px;
+}
+.btn-acao:hover { background: var(--vermelho); color: white; border-color: var(--vermelho); }
+
+/* Controles de leitura */
+.leitura-ctrl {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 10px 14px;
+  background: var(--creme);
+  border: 1px solid var(--borda);
+  border-radius: 6px;
+  font-size: 0.78rem;
+  color: var(--texto-sec);
+}
+.fonte-btn {
+  background: var(--branco);
+  border: 1px solid var(--borda);
+  width: 28px; height: 28px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.8rem;
+  transition: all var(--transicao);
+}
+.fonte-btn:hover { background: var(--vermelho); color: white; border-color: var(--vermelho); }
+
+/* Índice automático */
+.artigo-indice {
+  background: var(--creme);
+  border: 1px solid var(--borda);
+  border-left: 3px solid var(--vermelho);
+  border-radius: 0 6px 6px 0;
+  padding: 16px 20px;
+  margin-bottom: 28px;
+}
+.artigo-indice h4 {
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--texto-sec);
+  margin-bottom: 10px;
+}
+.artigo-indice ol {
+  list-style: decimal;
+  padding-left: 18px;
+}
+.artigo-indice li {
+  font-size: 0.83rem;
+  color: var(--vermelho);
+  margin-bottom: 5px;
+  cursor: pointer;
+}
+.artigo-indice li:hover { text-decoration: underline; }
+
+.artigo-corpo {
+  line-height: 1.85;
+  color: #222;
+  font-size: 1.05rem;
+}
+.artigo-corpo p { margin-bottom: 1.3em; }
+.artigo-corpo h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.35rem;
+  margin: 2em 0 0.8em;
+  color: var(--texto);
+}
+.artigo-corpo h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  margin: 1.6em 0 0.6em;
+  color: var(--texto);
+}
+.artigo-corpo blockquote {
+  margin: 1.8em 0;
+  padding: 18px 24px;
+  border-left: 4px solid var(--vermelho);
+  background: var(--creme);
+  font-style: italic;
+  font-size: 1.0rem;
+  color: var(--texto-sec);
+  border-radius: 0 6px 6px 0;
+}
+.artigo-corpo strong { font-weight: 600; color: var(--texto); }
+
+.artigo-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--borda); }
+.artigo-tag {
+  background: var(--creme-escuro);
+  border: 1px solid var(--borda);
+  color: var(--texto-sec);
+  font-size: 0.75rem;
+  padding: 4px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all var(--transicao);
+}
+.artigo-tag:hover { background: var(--vermelho); color: white; border-color: var(--vermelho); }
+
+/* ── VERBETES ── */
+.verbetes-layout { display: grid; grid-template-columns: 220px 1fr; gap: 28px; }
+.verbetes-indice {
+  background: white;
+  border: 1px solid var(--borda);
+  border-radius: 6px;
+  padding: 18px;
+  position: sticky;
+  top: 110px;
+  height: fit-content;
+  max-height: calc(100vh - 130px);
+  overflow-y: auto;
+}
+.verbetes-indice-titulo {
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--texto-sec);
+  margin-bottom: 12px;
+}
+.alfa-grupo { margin-bottom: 10px; }
+.alfa-letra {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--vermelho);
+  padding: 3px 0;
+  border-bottom: 1px solid var(--borda);
+  margin-bottom: 5px;
+}
+.alfa-item {
+  display: block;
+  padding: 4px 8px;
+  font-size: 0.8rem;
+  color: var(--texto-sec);
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all var(--transicao);
+  text-decoration: none;
+}
+.alfa-item:hover { background: var(--creme); color: var(--vermelho); }
+
+.verbete-card {
+  background: white;
+  border: 1px solid var(--borda);
+  border-radius: 6px;
+  padding: 28px 32px;
+  position: relative;
+}
+.verbete-destaque {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  background: var(--amarelo);
+  color: #5a4000;
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 3px;
+}
+
+.verbete-titulo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.7rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+.verbete-resumo {
+  background: var(--creme);
+  border: 1px solid var(--borda);
+  border-radius: 6px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  font-size: 0.88rem;
+  line-height: 1.65;
+  color: var(--texto-sec);
+}
+.verbete-resumo strong { display: block; font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--vermelho); margin-bottom: 6px; }
+.verbete-corpo { font-size: 0.95rem; line-height: 1.8; }
+.verbete-corpo p { margin-bottom: 1em; }
+.verbete-link { color: var(--vermelho); text-decoration: underline; cursor: pointer; }
+.verbete-link:hover { text-decoration: none; }
+
+/* ── ADMIN ── */
+.admin-wrap { max-width: 1100px; margin: 0 auto; padding: 28px 20px 60px; }
+
+.admin-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+.admin-titulo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+.admin-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 14px;
+  margin-bottom: 28px;
+}
+.stat-card {
+  background: white;
+  border: 1px solid var(--borda);
+  border-radius: 6px;
+  padding: 18px 20px;
+  text-align: center;
+}
+.stat-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--vermelho);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.stat-label { font-size: 0.75rem; color: var(--texto-sec); letter-spacing: 0.05em; }
+
+.admin-menu {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+  margin-bottom: 32px;
+}
+.admin-menu-item {
+  background: white;
+  border: 1px solid var(--borda);
+  border-radius: 6px;
+  padding: 16px 20px;
+  cursor: pointer;
+  transition: all var(--transicao);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--texto);
+}
+.admin-menu-item:hover { background: var(--vermelho); color: white; border-color: var(--vermelho); }
+.admin-menu-item .menu-icon { font-size: 1.2rem; }
+
+/* Tabela admin */
+.admin-table-wrap { background: white; border: 1px solid var(--borda); border-radius: 6px; overflow: hidden; }
+.admin-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+.admin-table th {
+  background: var(--creme-escuro);
+  padding: 11px 16px;
+  text-align: left;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--texto-sec);
+  font-weight: 600;
+  border-bottom: 1px solid var(--borda);
+}
+.admin-table td { padding: 12px 16px; border-bottom: 1px solid var(--cinza-claro); vertical-align: middle; }
+.admin-table tr:last-child td { border-bottom: none; }
+.admin-table tr:hover td { background: var(--creme); }
+
+.badge-pub {
+  display: inline-block;
+  font-size: 0.65rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 3px;
+  font-weight: 600;
+}
+.badge-pub.sim { background: #e6f4ea; color: #1e6b35; }
+.badge-pub.nao { background: #fff3e0; color: #8a5500; }
+
+.btn-tabela {
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  border: 1px solid var(--borda);
+  background: white;
+  color: var(--texto-sec);
+  transition: all var(--transicao);
+  margin-left: 4px;
+}
+.btn-tabela:hover { background: var(--vermelho); color: white; border-color: var(--vermelho); }
+.btn-tabela.apagar:hover { background: #cc0000; border-color: #cc0000; }
+
+/* Form admin */
+.admin-form-wrap { background: white; border: 1px solid var(--borda); border-radius: 6px; padding: 28px; }
+.form-grupo { margin-bottom: 20px; }
+.form-label {
+  display: block;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--texto-sec);
+  font-weight: 600;
+  margin-bottom: 7px;
+}
+.form-input, .form-select, .form-textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--borda);
+  border-radius: 5px;
+  font-family: 'Source Serif 4', serif;
+  font-size: 0.92rem;
+  color: var(--texto);
+  background: white;
+  transition: border-color var(--transicao);
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  outline: none;
+  border-color: var(--vermelho);
+  box-shadow: 0 0 0 3px rgba(196,0,0,0.1);
+}
+.form-textarea { min-height: 320px; resize: vertical; line-height: 1.65; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+.form-check { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+.form-check input[type=checkbox] {
+  width: 16px; height: 16px;
+  accent-color: var(--vermelho);
+  cursor: pointer;
+}
+
+.btn-primario {
+  background: var(--vermelho);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 11px 24px;
+  font-family: 'Source Serif 4', serif;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background var(--transicao);
+  font-weight: 600;
+}
+.btn-primario:hover { background: var(--vermelho-hover); }
+
+.btn-secundario {
+  background: var(--creme-escuro);
+  color: var(--texto);
+  border: 1px solid var(--borda);
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-family: 'Source Serif 4', serif;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all var(--transicao);
+}
+.btn-secundario:hover { background: var(--cinza-claro); }
+
+.form-acoes { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+
+/* Editor rico simples */
+.editor-toolbar {
+  display: flex;
+  gap: 3px;
+  flex-wrap: wrap;
+  padding: 8px 10px;
+  background: var(--creme);
+  border: 1px solid var(--borda);
+  border-bottom: none;
+  border-radius: 5px 5px 0 0;
+}
+.editor-btn {
+  background: white;
+  border: 1px solid var(--borda);
+  border-radius: 3px;
+  padding: 4px 9px;
+  font-size: 0.78rem;
+  cursor: pointer;
+  font-family: 'Source Serif 4', serif;
+  color: var(--texto-sec);
+  transition: all var(--transicao);
+}
+.editor-btn:hover { background: var(--vermelho); color: white; border-color: var(--vermelho); }
+.editor-btn b { font-weight: 900; }
+.editor-btn i { font-style: italic; }
+.editor-btn u { text-decoration: underline; }
+
+.editor-area {
+  min-height: 280px;
+  padding: 14px;
+  border: 1px solid var(--borda);
+  border-radius: 0 0 5px 5px;
+  font-family: 'Source Serif 4', serif;
+  font-size: 0.95rem;
+  line-height: 1.75;
+  outline: none;
+  background: white;
+}
+.editor-area:focus { border-color: var(--vermelho); box-shadow: 0 0 0 3px rgba(196,0,0,0.1); }
+
+/* ── LOGIN ── */
+#loginView {
+  min-height: 70vh;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+#loginView.aberto { display: flex; }
+
+.login-box {
+  background: white;
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+  padding: 44px 40px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 8px 32px var(--sombra);
+}
+.login-logo {
+  text-align: center;
+  margin-bottom: 28px;
+}
+.login-estrela {
+  width: 52px; height: 52px;
+  background: var(--vermelho);
+  clip-path: polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);
+  margin: 0 auto 12px;
+}
+.login-titulo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--texto);
+  margin-bottom: 4px;
+}
+.login-sub { font-size: 0.8rem; color: var(--texto-sec); }
+
+/* ── TOAST ── */
+#toastArea {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+.toast {
+  background: var(--texto);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  animation: toastIn 0.25s ease;
+  min-width: 240px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.toast.sucesso { background: #1a6b30; }
+.toast.erro { background: #8b0000; }
+@keyframes toastIn { from { opacity:0; transform: translateX(20px); } to { opacity:1; transform: translateX(0); } }
+
+/* ── RODAPÉ ── */
+footer {
+  background: #0d0d0d;
+  color: rgba(255,255,255,0.6);
+  padding: 32px 20px;
+  margin-top: 40px;
+}
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.footer-marca {
+  font-family: 'Playfair Display', serif;
+  color: white;
+  font-size: 1rem;
+}
+.footer-marca span { display: block; font-family: 'Source Serif 4', serif; font-size: 0.7rem; font-weight: 300; opacity: 0.5; margin-top: 3px; }
+.footer-links { display: flex; gap: 16px; font-size: 0.78rem; }
+.footer-links a { color: rgba(255,255,255,0.5); text-decoration: none; transition: color 0.2s; cursor: pointer; }
+.footer-links a:hover { color: var(--amarelo); }
+
+/* ── MODAL ── */
+#modalOverlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 400;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  backdrop-filter: blur(2px);
+}
+#modalOverlay.aberto { display: flex; }
+.modal-box {
+  background: white;
+  border-radius: 8px;
+  padding: 28px;
+  max-width: 460px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  animation: slideDown 0.2s ease;
+}
+.modal-titulo { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; margin-bottom: 12px; }
+.modal-texto { font-size: 0.9rem; color: var(--texto-sec); margin-bottom: 22px; line-height: 1.6; }
+.modal-acoes { display: flex; gap: 10px; justify-content: flex-end; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .artigos-grid { grid-template-columns: 1fr; }
+  .verbetes-layout { grid-template-columns: 1fr; }
+  .verbetes-indice { position: static; }
+  .form-row { grid-template-columns: 1fr; }
+  .artigo-container { padding: 22px 18px; }
+  .header-top { padding-left: 14px; padding-right: 14px; }
+  .admin-menu { grid-template-columns: 1fr 1fr; }
+  .admin-stats { grid-template-columns: 1fr 1fr; }
+  .login-box { padding: 32px 24px; }
+  #toastArea { left: 16px; right: 16px; bottom: 16px; }
+  .toast { min-width: unset; }
+}
+@media (max-width: 480px) {
+  .logo-sub { display: none; }
+  .artigo-meta { flex-direction: column; gap: 8px; }
+  .artigo-acoes { margin-left: 0; }
+  .admin-menu { grid-template-columns: 1fr; }
+}
+
+/* ── TAB CONTENT ── */
+.tab-content { display: none; }
+.tab-content.ativo { display: block; }
+
+/* Modo leitura */
+body.modo-leitura .artigo-container {
+  max-width: 640px;
+  margin: 0 auto;
+}
+body.modo-leitura #header,
+body.modo-leitura .nav-wrap,
+body.modo-leitura footer { opacity: 0.1; pointer-events: none; }
+body.modo-leitura #artigoView { max-width: 860px; }
+
+/* Ajuste fonte leitura */
+[data-font-size="pequena"] .artigo-corpo { font-size: 0.88rem; }
+[data-font-size="media"] .artigo-corpo { font-size: 1.05rem; }
+[data-font-size="grande"] .artigo-corpo { font-size: 1.2rem; }
+
+/* Modo dark opcional */
+body.dark {
+  --creme: #1a1a1a;
+  --creme-escuro: #222;
+  --branco: #2a2a2a;
+  --borda: #3a3a3a;
+  --cinza-claro: #333;
+  --texto: #f0f0f0;
+  --texto-sec: #aaa;
+  --sombra: rgba(0,0,0,0.4);
+}
+</style>
+</head>
+<body data-font-size="media">
+
+<!-- ══ HEADER ══ -->
+<div id="header">
+  <div class="header-top">
+    <a class="logo-wrap" onclick="mostrarView('inicio')">
+      <div class="logo-estrela"></div>
+      <div class="logo-texto">
+        <div class="logo-titulo" id="siteTitle">Servir ao Povo</div>
+        <div class="logo-sub" id="siteSub">arquivo de conteúdos marxistas-leninistas-maoístas em Portugal</div>
+      </div>
+    </a>
+    <div class="header-acoes">
+      <button class="btn-icon" onclick="abrirPesquisa()" title="Pesquisar">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
+      <button class="btn-icon" onclick="toggleDark()" title="Modo escuro" id="darkBtn">
+        <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="nav-wrap">
+    <nav id="mainNav">
+      <button class="ativo" onclick="navClick(this,'inicio')">Início</button>
+      <button onclick="navClick(this,'teoria')">Teoria MLM</button>
+      <button onclick="navClick(this,'guerras')">Guerras Populares</button>
+      <button onclick="navClick(this,'brasil')">Novo Brasil</button>
+      <button onclick="navClick(this,'liga')">Liga Comunista Internacional</button>
+      <button onclick="navClick(this,'portugal')">Portugal</button>
+      <button onclick="navClick(this,'verbetes')">Verbetes</button>
+      <button onclick="navClick(this,'sobre')">Sobre</button>
+      <button onclick="navClick(this,'admin')">Administração</button>
+    </nav>
+  </div>
+</div>
+
+<!-- ══ PESQUISA OVERLAY ══ -->
+<div id="pesquisaOverlay" onclick="fecharPesquisaOutside(event)">
+  <div class="pesquisa-box">
+    <div class="pesquisa-input-wrap">
+      <svg viewBox="0 0 24 24" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="pesquisaInput" type="text" placeholder="Pesquisar por título, autor, categoria, tag..." oninput="doPesquisa(this.value)" onkeydown="pesquisaKey(event)">
+      <div class="pesquisa-filtros">
+        <select class="filtro-select" id="filtroTipo" onchange="doPesquisa(document.getElementById('pesquisaInput').value)">
+          <option value="">Tipo: Todos</option>
+          <option value="texto">Texto</option>
+          <option value="video">Vídeo</option>
+          <option value="pdf">PDF</option>
+        </select>
+        <select class="filtro-select" id="filtroCat" onchange="doPesquisa(document.getElementById('pesquisaInput').value)">
+          <option value="">Categoria: Todas</option>
+          <option value="teoria">Teoria MLM</option>
+          <option value="comunicados">Comunicados</option>
+          <option value="guerras">Guerras Populares</option>
+        </select>
+      </div>
+      <button class="pesquisa-fechar" onclick="fecharPesquisa()">✕</button>
+    </div>
+    <div class="pesquisa-resultados" id="pesquisaResultados">
+      <div class="pesquisa-sugestoes" id="pesquisaSugestoes">
+        <div class="pesquisa-label">Populares</div>
+        <span class="pesquisa-chip" onclick="pesquisarChip('maoísmo')">maoísmo</span>
+        <span class="pesquisa-chip" onclick="pesquisarChip('imperialismo')">imperialismo</span>
+        <span class="pesquisa-chip" onclick="pesquisarChip('guerra popular')">guerra popular</span>
+        <span class="pesquisa-chip" onclick="pesquisarChip('dialética')">dialética</span>
+        <span class="pesquisa-chip" onclick="pesquisarChip('marx')">marx</span>
+        <span class="pesquisa-chip" onclick="pesquisarChip('lenine')">lenine</span>
+        <span class="pesquisa-chip" onclick="pesquisarChip('mao')">mao tsé-tung</span>
+        <span class="pesquisa-chip" onclick="pesquisarChip('palestina')">palestina</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TOAST AREA ══ -->
+<div id="toastArea"></div>
+
+<!-- ══ MODAL ══ -->
+<div id="modalOverlay" onclick="fecharModalOutside(event)">
+  <div class="modal-box">
+    <div class="modal-titulo" id="modalTitulo">Confirmar acção</div>
+    <div class="modal-texto" id="modalTexto">Tens a certeza?</div>
+    <div class="modal-acoes">
+      <button class="btn-secundario" onclick="fecharModal()">Cancelar</button>
+      <button class="btn-primario" id="modalConfirmar" style="background:#cc0000">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CAROUSEL + CONTEÚDO PRINCIPAL ══ -->
+<div id="mainContent">
+
+  <!-- CAROUSEL -->
+  <div class="carousel-section" id="carouselSection">
+    <div class="carousel-track" id="carouselTrack"></div>
+    <div class="carousel-ctrl">
+      <div id="carouselDots"></div>
+      <button class="carousel-btn" onclick="prevSlide()">‹</button>
+      <button class="carousel-btn" onclick="nextSlide()">›</button>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="main-wrap">
+
+    <!-- INÍCIO TAB -->
+    <div class="tab-content ativo" id="tab-inicio">
+      <div class="filtros-rapidos" id="filtrosRapidos">
+        <button class="filtro-btn ativo" onclick="filtrarCat('todos', this)">Todos</button>
+        <button class="filtro-btn" onclick="filtrarCat('teoria', this)">Teoria MLM</button>
+        <button class="filtro-btn" onclick="filtrarCat('comunicados', this)">Comunicados</button>
+        <button class="filtro-btn" onclick="filtrarCat('guerras', this)">Guerras Populares</button>
+        <button class="filtro-btn" onclick="filtrarCat('portugal', this)">Portugal</button>
+        <select class="ordem-select" onchange="reordenar(this.value)">
+          <option value="recente">Mais recente</option>
+          <option value="antigo">Mais antigo</option>
+          <option value="titulo">Título A-Z</option>
+        </select>
+      </div>
+      <div class="secao-titulo">Publicações Recentes</div>
+      <div class="artigos-grid" id="articleList"></div>
+      <div class="paginacao" id="paginacao"></div>
+    </div>
+
+    <!-- TEORIA TAB -->
+    <div class="tab-content" id="tab-teoria">
+      <div class="secao-titulo">Teoria MLM</div>
+      <div class="artigos-grid" id="teoriaList"></div>
+    </div>
+
+    <!-- GUERRAS TAB -->
+    <div class="tab-content" id="tab-guerras">
+      <div class="secao-titulo">Guerras Populares</div>
+      <div class="artigos-grid" id="guerrasList"></div>
+    </div>
+
+    <!-- BRASIL TAB -->
+    <div class="tab-content" id="tab-brasil">
+      <div class="secao-titulo">Novo Brasil</div>
+      <div class="artigos-grid" id="brasilList"></div>
+    </div>
+
+    <!-- LIGA TAB -->
+    <div class="tab-content" id="tab-liga">
+      <div class="secao-titulo">Liga Comunista Internacional</div>
+      <div class="artigos-grid" id="ligaList"></div>
+    </div>
+
+    <!-- PORTUGAL TAB -->
+    <div class="tab-content" id="tab-portugal">
+      <div class="secao-titulo">Portugal</div>
+      <div class="artigos-grid" id="portugalList"></div>
+    </div>
+
+    <!-- VERBETES TAB -->
+    <div class="tab-content" id="tab-verbetes">
+      <div class="secao-titulo">Verbetes</div>
+      <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;align-items:center">
+        <input type="text" class="form-input" style="max-width:300px;padding:8px 14px" placeholder="Pesquisar verbetes..." oninput="filtrarVerbetes(this.value)">
+        <button class="filtro-btn" onclick="filtrarVerbetesCat('todos',this)" style="margin:0">Todos</button>
+        <button class="filtro-btn" onclick="filtrarVerbetesCat('teoria',this)" style="margin:0">Teoria</button>
+        <button class="filtro-btn" onclick="filtrarVerbetesCat('pratica',this)" style="margin:0">Prática</button>
+      </div>
+      <div class="verbetes-layout">
+        <div class="verbetes-indice">
+          <div class="verbetes-indice-titulo">Índice Alfabético</div>
+          <div id="verbetesIndice"></div>
+        </div>
+        <div id="verbetesList"></div>
+      </div>
+    </div>
+
+    <!-- SOBRE TAB -->
+    <div class="tab-content" id="tab-sobre">
+      <div style="max-width:720px;margin:0 auto">
+        <div class="artigo-container">
+          <div class="artigo-cat">Sobre</div>
+          <h1 class="artigo-titulo">Sobre a Biblioteca</h1>
+          <div class="artigo-corpo">
+            <p>A <strong>Biblioteca Marxista "Servir ao Povo"</strong> é um arquivo digital de conteúdos marxistas-leninistas-maoístas em língua portuguesa, com foco particular na realidade portuguesa e nos movimentos revolucionários internacionais.</p>
+            <blockquote>Sem teoria revolucionária não pode haver movimento revolucionário. — V. I. Lénine</blockquote>
+            <p>Esta biblioteca pretende reunir e difundir textos de formação política, comunicados organizativos, análises de conjuntura e materiais de apoio à luta revolucionária.</p>
+            <h2>Missão</h2>
+            <p>Contribuir para a formação política das massas trabalhadoras em Portugal e nos países de língua portuguesa, disponibilizando gratuitamente materiais de estudo e análise marxista-leninista-maoísta.</p>
+            <h2>Contacto</h2>
+            <p>Para contactos, submissão de textos ou colaborações, pode escrever para o endereço de correio electrónico disponível nos nossos canais de comunicação.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADMIN TAB -->
+    <div class="tab-content" id="tab-admin">
+      <div id="adminLogin" style="display:none">
+        <div style="min-height:60vh;display:flex;align-items:center;justify-content:center">
+          <div class="login-box">
+            <div class="login-logo">
+              <div class="login-estrela"></div>
+              <div class="login-titulo">Servir ao Povo</div>
+              <div class="login-sub">Painel de Administração</div>
+            </div>
+            <div id="loginErro" style="display:none;background:#fff0f0;border:1px solid #f5c6c6;border-radius:5px;padding:10px 14px;font-size:0.85rem;color:#8b0000;margin-bottom:14px"></div>
+            <div class="form-grupo">
+              <label class="form-label">Email</label>
+              <input class="form-input" type="email" id="loginEmail" placeholder="admin@biblioteca.pt" onkeydown="if(event.key==='Enter')doLogin()">
+            </div>
+            <div class="form-grupo">
+              <label class="form-label">Password</label>
+              <input class="form-input" type="password" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+            </div>
+            <button class="btn-primario" style="width:100%;margin-top:6px" onclick="doLogin()">Entrar</button>
+          </div>
+        </div>
+      </div>
+      <div id="adminDashboard" style="display:none">
+        <div class="admin-wrap">
+          <div class="admin-top">
+            <div class="admin-titulo">Painel de Administração</div>
+            <div style="display:flex;gap:8px">
+              <button class="btn-secundario" onclick="adminSeccao('conteudos')">Gerir Conteúdos</button>
+              <button class="btn-primario" onclick="adminSeccao('novoConteudo')">+ Novo Conteúdo</button>
+              <button class="btn-secundario" onclick="doLogout()">Sair</button>
+            </div>
+          </div>
+          <div class="admin-stats">
+            <div class="stat-card"><div class="stat-num" id="statTotal">24</div><div class="stat-label">Total de conteúdos</div></div>
+            <div class="stat-card"><div class="stat-num" id="statPub">18</div><div class="stat-label">Publicados</div></div>
+            <div class="stat-card"><div class="stat-num" id="statRasc">6</div><div class="stat-label">Rascunhos</div></div>
+            <div class="stat-card"><div class="stat-num" id="statCats">7</div><div class="stat-label">Categorias</div></div>
+          </div>
+          <div class="admin-menu">
+            <div class="admin-menu-item" onclick="adminSeccao('conteudos')"><span class="menu-icon">📄</span> Gerir Conteúdos</div>
+            <div class="admin-menu-item" onclick="adminSeccao('categorias')"><span class="menu-icon">🗂</span> Categorias</div>
+            <div class="admin-menu-item" onclick="adminSeccao('tags')"><span class="menu-icon">🏷</span> Tags</div>
+            <div class="admin-menu-item" onclick="adminSeccao('verbetesAdmin')"><span class="menu-icon">📚</span> Verbetes</div>
+            <div class="admin-menu-item" onclick="adminSeccao('media')"><span class="menu-icon">🖼</span> Média</div>
+            <div class="admin-menu-item" onclick="adminSeccao('configuracoes')"><span class="menu-icon">⚙</span> Configurações</div>
+          </div>
+          <div class="secao-titulo">Conteúdos Recentes</div>
+          <div class="admin-table-wrap">
+            <table class="admin-table" id="adminRecentTable"></table>
+          </div>
+        </div>
+      </div>
+      <div id="adminConteudos" style="display:none">
+        <div class="admin-wrap">
+          <div class="admin-top">
+            <div class="admin-titulo">Gerir Conteúdos</div>
+            <div style="display:flex;gap:8px">
+              <button class="btn-secundario" onclick="adminSeccao('dashboard')">← Dashboard</button>
+              <button class="btn-primario" onclick="adminSeccao('novoConteudo')">+ Novo</button>
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap">
+            <input class="form-input" style="max-width:280px;padding:8px 12px" type="text" placeholder="Filtrar..." oninput="filtrarAdminTabela(this.value)" id="adminFiltroInput">
+            <select class="filtro-select" style="padding:8px 12px">
+              <option>Estado: Todos</option>
+              <option>Publicados</option>
+              <option>Rascunhos</option>
+            </select>
+            <select class="filtro-select" style="padding:8px 12px">
+              <option>Categoria: Todas</option>
+              <option>Teoria MLM</option>
+              <option>Comunicados</option>
+            </select>
+          </div>
+          <div class="admin-table-wrap">
+            <table class="admin-table" id="adminConteudosTable"></table>
+          </div>
+        </div>
+      </div>
+      <div id="adminNovoConteudo" style="display:none">
+        <div class="admin-wrap">
+          <div class="admin-top">
+            <div class="admin-titulo" id="formTitulo">Novo Conteúdo</div>
+            <button class="btn-secundario" onclick="adminSeccao('conteudos')">← Voltar</button>
+          </div>
+          <div class="admin-form-wrap">
+            <div class="form-row">
+              <div class="form-grupo">
+                <label class="form-label">Título *</label>
+                <input class="form-input" id="fTitulo" placeholder="Título do conteúdo">
+              </div>
+              <div class="form-grupo">
+                <label class="form-label">Slug (URL)</label>
+                <input class="form-input" id="fSlug" placeholder="gerado-automaticamente">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-grupo">
+                <label class="form-label">Autor</label>
+                <input class="form-input" id="fAutor" placeholder="Nome do autor">
+              </div>
+              <div class="form-grupo">
+                <label class="form-label">Categoria</label>
+                <select class="form-select" id="fCategoria">
+                  <option value="">Sem categoria</option>
+                  <option>Teoria MLM</option>
+                  <option>Comunicados</option>
+                  <option>Guerras Populares</option>
+                  <option>Portugal</option>
+                  <option>Novo Brasil</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-grupo">
+              <label class="form-label">Excerto</label>
+              <textarea class="form-textarea" id="fExcerto" style="min-height:80px" placeholder="Breve descrição do conteúdo..."></textarea>
+            </div>
+            <div class="form-grupo">
+              <label class="form-label">Corpo do texto *</label>
+              <div class="editor-toolbar">
+                <button class="editor-btn" onclick="execCmd('bold')"><b>N</b></button>
+                <button class="editor-btn" onclick="execCmd('italic')"><i>I</i></button>
+                <button class="editor-btn" onclick="execCmd('underline')"><u>S</u></button>
+                <button class="editor-btn" onclick="execCmd('strikeThrough')"><s>T</s></button>
+                <button class="editor-btn" onclick="execCmd('insertOrderedList')">1.</button>
+                <button class="editor-btn" onclick="execCmd('insertUnorderedList')">•</button>
+                <button class="editor-btn" onclick="insertBlockquote()">❝</button>
+                <button class="editor-btn" onclick="insertH2()">H2</button>
+                <button class="editor-btn" onclick="insertH3()">H3</button>
+                <button class="editor-btn" onclick="execCmd('removeFormat')">✕ fmt</button>
+              </div>
+              <div class="editor-area" id="fCorpo" contenteditable="true" role="textbox" aria-multiline="true"></div>
+            </div>
+            <div class="form-grupo">
+              <label class="form-label">Tags (separadas por vírgula)</label>
+              <input class="form-input" id="fTags" placeholder="marx, imperialismo, teoria">
+            </div>
+            <div class="form-row">
+              <div class="form-grupo">
+                <label class="form-check">
+                  <input type="checkbox" id="fPublicado">
+                  <span style="font-size:0.88rem">Publicar imediatamente</span>
+                </label>
+              </div>
+            </div>
+            <div class="form-acoes">
+              <button class="btn-primario" onclick="guardarConteudo()">Guardar</button>
+              <button class="btn-secundario" onclick="previewConteudo()">Pré-visualizar</button>
+              <button class="btn-secundario" onclick="adminSeccao('conteudos')">Cancelar</button>
+              <span id="autoSaveMsg" style="font-size:0.75rem;color:var(--texto-sec);margin-left:8px"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="adminCategorias" style="display:none">
+        <div class="admin-wrap">
+          <div class="admin-top">
+            <div class="admin-titulo">Gerir Categorias</div>
+            <button class="btn-secundario" onclick="adminSeccao('dashboard')">← Dashboard</button>
+          </div>
+          <div class="admin-table-wrap">
+            <table class="admin-table">
+              <thead><tr><th>Nome</th><th>Slug</th><th>Conteúdos</th><th>Acções</th></tr></thead>
+              <tbody>
+                <tr><td>Teoria MLM</td><td>teoria-mlm</td><td>12</td><td><button class="btn-tabela">Editar</button><button class="btn-tabela apagar">Apagar</button></td></tr>
+                <tr><td>Comunicados</td><td>comunicados</td><td>7</td><td><button class="btn-tabela">Editar</button><button class="btn-tabela apagar">Apagar</button></td></tr>
+                <tr><td>Guerras Populares</td><td>guerras-populares</td><td>5</td><td><button class="btn-tabela">Editar</button><button class="btn-tabela apagar">Apagar</button></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div style="margin-top:20px;display:flex;gap:10px;align-items:center">
+            <input class="form-input" style="max-width:240px;padding:8px 12px" placeholder="Nova categoria...">
+            <button class="btn-primario">Adicionar</button>
+          </div>
+        </div>
+      </div>
+      <div id="adminConfiguracoes" style="display:none">
+        <div class="admin-wrap">
+          <div class="admin-top">
+            <div class="admin-titulo">Configurações</div>
+            <button class="btn-secundario" onclick="adminSeccao('dashboard')">← Dashboard</button>
+          </div>
+          <div class="admin-form-wrap">
+            <div class="secao-titulo">Identidade do Site</div>
+            <div class="form-grupo">
+              <label class="form-label">Título do Site</label>
+              <input class="form-input" id="cfgTitulo" value="Servir ao Povo" oninput="previewConfig()">
+            </div>
+            <div class="form-grupo">
+              <label class="form-label">Subtítulo</label>
+              <input class="form-input" id="cfgSub" value="arquivo de conteúdos marxistas-leninistas-maoístas em Portugal" oninput="previewConfig()">
+            </div>
+            <div class="form-grupo">
+              <label class="form-label">Preview em tempo real</label>
+              <div style="background:var(--creme);border:1px solid var(--borda);border-radius:6px;padding:16px 20px;font-size:0.85rem">
+                Título: <strong id="cfgPreviewTit">Servir ao Povo</strong><br>
+                <span style="font-size:0.78rem;color:var(--texto-sec)" id="cfgPreviewSub">arquivo de conteúdos marxistas-leninistas-maoístas em Portugal</span>
+              </div>
+            </div>
+            <div class="form-acoes">
+              <button class="btn-primario" onclick="guardarConfig()">Guardar Configurações</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main-wrap -->
+</div><!-- /mainContent -->
+
+<!-- ══ ARTIGO VIEW ══ -->
+<div id="artigoView">
+  <div style="max-width:780px;margin:0 auto">
+    <div class="breadcrumb">
+      <span onclick="fecharArtigo()">Início</span>
+      <span style="color:var(--texto-sec)">›</span>
+      <span id="bcCat" onclick="fecharArtigo()"></span>
+      <span style="color:var(--texto-sec)">›</span>
+      <span style="color:var(--texto-sec)" id="bcTitulo"></span>
+    </div>
+    <button class="artigo-voltar" onclick="fecharArtigo()">← Voltar</button>
+    <div class="leitura-ctrl">
+      <span style="font-size:0.75rem;color:var(--texto-sec);letter-spacing:0.05em;text-transform:uppercase">Tamanho:</span>
+      <button class="fonte-btn" onclick="setFonte('pequena')" title="Menor">A-</button>
+      <button class="fonte-btn" onclick="setFonte('media')" title="Normal" style="font-weight:600">A</button>
+      <button class="fonte-btn" onclick="setFonte('grande')" title="Maior">A+</button>
+      <button class="btn-acao" style="margin-left:auto" onclick="toggleModoLeitura()">📖 Modo leitura</button>
+      <button class="btn-acao" onclick="copiarLink()">🔗 Copiar link</button>
+    </div>
+    <div id="artigoIndice" style="display:none">
+      <div class="artigo-indice">
+        <h4>Índice</h4>
+        <ol id="indiceList"></ol>
+      </div>
+    </div>
+    <div class="artigo-container">
+      <div class="artigo-cat" id="viewCat"></div>
+      <h1 class="artigo-titulo" id="viewTitulo"></h1>
+      <div class="artigo-meta">
+        <span class="artigo-meta-item" id="viewMeta"></span>
+        <div class="artigo-acoes">
+          <button class="btn-acao" onclick="partilhar()">↗ Partilhar</button>
+        </div>
+      </div>
+      <div class="artigo-corpo" id="viewCorpo"></div>
+      <div class="artigo-tags" id="viewTags"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ RODAPÉ ══ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-marca">
+      Servir ao Povo
+      <span>arquivo marxista-leninista-maoísta em Portugal</span>
+    </div>
+    <div class="footer-links">
+      <a onclick="mostrarView('sobre')">Sobre</a>
+      <a onclick="abrirPesquisa()">Pesquisa</a>
+      <a onclick="navClick(document.querySelector('nav button:last-child'),'admin')">Admin</a>
+    </div>
+  </div>
+</footer>
+
+
+<script>
+// ══════════════════════════════════════════════════════════════════════════════
+// CONFIGURAÇÃO DA API
+// ══════════════════════════════════════════════════════════════════════════════
+const API_BASE = 'http://localhost:8000/api/v1';
+
+// ══════════════════════════════════════════════════════════════════════════════
+// ESTADO DA APLICAÇÃO
+// ══════════════════════════════════════════════════════════════════════════════
+let artigos = [];          // conteúdos carregados da API
+let verbetes = [];         // verbetes carregados da API
+let categorias = [];       // categorias carregadas da API
+let authToken = null;      // JWT token do admin
+
+let carouselIndex = 0;
+let carouselTimer = null;
+const CAROUSEL_N = 4;
+let artigosVisiveis = [];
+let paginaAtual = 1;
+const POR_PAGINA = 6;
+let adminLogado = false;
+let editandoId = null;
+let autoSaveTimer = null;
+let modoLeitura = false;
+
+// ── Recuperar token guardado ──────────────────────────────────────────────────
+authToken = localStorage.getItem('auth_token');
+if (authToken) adminLogado = true;
+
+// ══════════════════════════════════════════════════════════════════════════════
+// CLIENTE HTTP
+// ══════════════════════════════════════════════════════════════════════════════
+async function apiGet(path) {
+  const headers = { 'Content-Type': 'application/json' };
+  if (authToken) headers['Authorization'] = `Bearer ${authToken}`;
+  const res = await fetch(API_BASE + path, { headers });
+  if (!res.ok) throw new Error(`HTTP ${res.status}: ${await res.text()}`);
+  return res.json();
+}
+
+async function apiPost(path, body) {
+  const headers = { 'Content-Type': 'application/json' };
+  if (authToken) headers['Authorization'] = `Bearer ${authToken}`;
+  const res = await fetch(API_BASE + path, {
+    method: 'POST', headers, body: JSON.stringify(body)
+  });
+  if (!res.ok) throw new Error(`HTTP ${res.status}: ${await res.text()}`);
+  return res.json();
+}
+
+async function apiPut(path, body) {
+  const headers = { 'Content-Type': 'application/json' };
+  if (authToken) headers['Authorization'] = `Bearer ${authToken}`;
+  const res = await fetch(API_BASE + path, {
+    method: 'PUT', headers, body: JSON.stringify(body)
+  });
+  if (!res.ok) throw new Error(`HTTP ${res.status}: ${await res.text()}`);
+  return res.json();
+}
+
+async function apiDelete(path) {
+  const headers = { 'Content-Type': 'application/json' };
+  if (authToken) headers['Authorization'] = `Bearer ${authToken}`;
+  const res = await fetch(API_BASE + path, { method: 'DELETE', headers });
+  if (!res.ok) throw new Error(`HTTP ${res.status}: ${await res.text()}`);
+  return res.ok;
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// CARREGAMENTO INICIAL DE DADOS
+// ══════════════════════════════════════════════════════════════════════════════
+async function carregarDados() {
+  mostrarLoadingGlobal(true);
+  try {
+    // Carregar em paralelo
+    const [conteudosResp, verbetesResp, categoriasResp] = await Promise.all([
+      apiGet('/public/contents?page=1&page_size=50'),
+      apiGet('/public/verbetes?page=1&page_size=100'),
+      apiGet('/public/categories'),
+    ]);
+
+    // Normalizar conteúdos para o formato interno do frontend
+    artigos = (conteudosResp.items || []).map(normalizarConteudo);
+    verbetes = (verbetesResp.items || []).map(normalizarVerbete);
+    categorias = Array.isArray(categoriasResp) ? categoriasResp : [];
+
+    artigosVisiveis = [...artigos];
+
+  } catch (err) {
+    console.error('Erro ao carregar dados:', err);
+    toast('Não foi possível conectar à API. Verifique se o servidor está a correr.', 'erro');
+    artigos = [];
+    verbetes = [];
+    categorias = [];
+    artigosVisiveis = [];
+  } finally {
+    mostrarLoadingGlobal(false);
+  }
+}
+
+// Adapta o formato da API para o formato que o frontend usa
+function normalizarConteudo(c) {
+  return {
+    id: c.id,
+    slug: c.slug,
+    titulo: c.title,
+    categoria: c.category?.name || 'Geral',
+    catSlug: c.category?.slug || 'geral',
+    autor: c.author || 'Redação',
+    data: c.published_at
+      ? new Date(c.published_at).toLocaleDateString('pt-PT', {day:'numeric', month:'short', year:'numeric'})
+      : new Date(c.created_at).toLocaleDateString('pt-PT', {day:'numeric', month:'short', year:'numeric'}),
+    excerto: c.excerpt || '',
+    corpo: c.body || '',
+    tags: (c.tags || []).map(t => t.name),
+    tipo: c.content_type || 'artigo',
+    is_featured: c.is_featured || false,
+    is_published: c.is_published || false,
+    _raw: c,
+  };
+}
+
+function normalizarVerbete(v) {
+  return {
+    id: v.id,
+    slug: v.slug,
+    titulo: v.term,
+    letra: v.letter || v.term[0].toUpperCase(),
+    cat: 'teoria',
+    destaque: v.is_featured || false,
+    resumo: v.definition ? v.definition.replace(/<[^>]+>/g, '').slice(0, 200) + '…' : '',
+    corpo: v.definition || '',
+    datas: [],
+    links: [],
+    _raw: v,
+  };
+}
+
+function mostrarLoadingGlobal(show) {
+  let el = document.getElementById('globalLoading');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'globalLoading';
+    el.style.cssText = 'position:fixed;top:0;left:0;right:0;height:3px;background:var(--amarelo);z-index:9999;transition:opacity 0.3s';
+    document.body.appendChild(el);
+  }
+  el.style.opacity = show ? '1' : '0';
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', async () => {
+  await carregarDados();
+
+  buildCarousel();
+  buildList('articleList', artigosVisiveis.slice(0, POR_PAGINA));
+  buildPaginacao();
+
+  // Listas por categoria (dinâmicas conforme o que existe na API)
+  const catSlugsMapa = {
+    teoriaList: 'teoria',
+    guerrasList: 'guerras',
+    brasilList: 'brasil',
+    ligaList: 'liga',
+    portugalList: 'portugal',
+    comunicadosList: 'comunicados',
+  };
+  for (const [listId, slug] of Object.entries(catSlugsMapa)) {
+    buildList(listId, artigos.filter(a => a.catSlug === slug));
+  }
+
+  buildVerbetes();
+  buildAdminRecentTable();
+  buildAdminConteudosTable();
+  headerScroll();
+  document.getElementById('adminLogin').style.display = 'block';
+
+  // Preencher filtros de categoria com dados da API
+  preencherFiltrosCategorias();
+});
+
+function preencherFiltrosCategorias() {
+  // Filtros rápidos na aba principal
+  const filtros = document.getElementById('filtrosRapidos');
+  if (filtros && categorias.length > 0) {
+    const extra = categorias.map(c =>
+      `<button class="filtro-btn" onclick="filtrarCat('${c.slug}', this)">${c.name}</button>`
+    ).join('');
+    // Inserir após o botão "Todos" se já existir
+    const todos = filtros.querySelector('.filtro-btn.ativo');
+    if (todos) todos.insertAdjacentHTML('afterend', extra);
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// HEADER SCROLL
+// ══════════════════════════════════════════════════════════════════════════════
+function headerScroll() {
+  window.addEventListener('scroll', () => {
+    const h = document.getElementById('header');
+    if (window.scrollY > 60) h.classList.add('compact');
+    else h.classList.remove('compact');
+  });
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// CAROUSEL (usa artigos em destaque da API)
+// ══════════════════════════════════════════════════════════════════════════════
+function buildCarousel() {
+  const track = document.getElementById('carouselTrack');
+  const dots = document.getElementById('carouselDots');
+
+  // Preferir artigos em destaque; fallback para os primeiros 4
+  const featured = artigos.filter(a => a.is_featured).slice(0, CAROUSEL_N);
+  const items = featured.length >= 2 ? featured : artigos.slice(0, CAROUSEL_N);
+
+  if (items.length === 0) {
+    track.innerHTML = `<div class="carousel-slide" style="min-height:200px"><div style="position:absolute;inset:0;background:linear-gradient(135deg,#1a0000,#2d0000);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.4);font-size:0.9rem">Sem conteúdos em destaque</div></div>`;
+    dots.innerHTML = '';
+    return;
+  }
+
+  track.innerHTML = items.map((a) => `
+    <div class="carousel-slide" onclick="openArtigo(${a.id})" style="min-height:200px">
+      <div style="position:absolute;inset:0;background:linear-gradient(135deg,#1a0000,#2d0000);"></div>
+      <div class="carousel-inner">
+        <div class="carousel-badge">${a.categoria}</div>
+        <div class="carousel-titulo">${a.titulo}</div>
+        <div class="carousel-excerto">${a.excerto}</div>
+        <div class="carousel-meta">${a.autor} · ${a.data}</div>
+      </div>
+    </div>
+  `).join('');
+
+  dots.innerHTML = items.map((_,i) => `
+    <div class="carousel-dot ${i===0?'ativo':''}" onclick="goSlide(${i})"></div>
+  `).join('');
+
+  let sx = 0;
+  track.addEventListener('touchstart', e => sx = e.touches[0].clientX);
+  track.addEventListener('touchend', e => {
+    const d = sx - e.changedTouches[0].clientX;
+    if (Math.abs(d) > 40) d > 0 ? nextSlide() : prevSlide();
+  });
+
+  startAuto();
+}
+
+function goSlide(i) {
+  const items = document.querySelectorAll('.carousel-slide');
+  carouselIndex = Math.min(i, items.length - 1);
+  document.getElementById('carouselTrack').style.transform = `translateX(-${carouselIndex*100}%)`;
+  document.querySelectorAll('.carousel-dot').forEach((d,j) => d.classList.toggle('ativo', j===carouselIndex));
+  resetAuto();
+}
+function nextSlide() {
+  const n = document.querySelectorAll('.carousel-slide').length || CAROUSEL_N;
+  goSlide((carouselIndex+1)%n);
+}
+function prevSlide() {
+  const n = document.querySelectorAll('.carousel-slide').length || CAROUSEL_N;
+  goSlide((carouselIndex-1+n)%n);
+}
+function startAuto() { carouselTimer = setInterval(nextSlide, 5000); }
+function resetAuto() { clearInterval(carouselTimer); startAuto(); }
+
+// ══════════════════════════════════════════════════════════════════════════════
+// CARD LIST
+// ══════════════════════════════════════════════════════════════════════════════
+function buildList(id, list) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  if (list.length === 0) {
+    el.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:48px;color:var(--texto-sec);font-size:0.9rem">Nenhum conteúdo nesta categoria.</div>`;
+    return;
+  }
+  const tipoIcon = {texto:'📄', artigo:'📄', video:'🎥', pdf:'📕', imagem:'🖼'};
+  el.innerHTML = list.map(a => `
+    <div class="card" onclick="openArtigo(${a.id})" role="article" tabindex="0" onkeydown="if(event.key==='Enter')openArtigo(${a.id})">
+      <div class="card-thumb">
+        <span style="font-size:2.2rem;opacity:0.25;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)">☭</span>
+        <div class="card-thumb-overlay"></div>
+        <span class="card-tipo">${tipoIcon[a.tipo]||'📄'}</span>
+      </div>
+      <div class="card-body">
+        <span class="card-cat">${a.categoria}</span>
+        <div class="card-titulo">${a.titulo}</div>
+        <div class="card-excerto">${a.excerto}</div>
+        <div class="card-footer">
+          <div class="card-meta">${a.autor} · ${a.data}</div>
+          <div class="card-tags">${(a.tags||[]).slice(0,2).map(t=>`<span class="card-tag">${t}</span>`).join('')}</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// PAGINAÇÃO (busca página da API)
+// ══════════════════════════════════════════════════════════════════════════════
+function buildPaginacao() {
+  const total = Math.ceil(artigosVisiveis.length / POR_PAGINA);
+  const el = document.getElementById('paginacao');
+  if (!el || total <= 1) { if(el) el.innerHTML=''; return; }
+  el.innerHTML = Array.from({length:total},(_,i)=>i+1).map(p => `
+    <button class="pag-btn ${p===paginaAtual?'ativo':''}" onclick="irPagina(${p})">${p}</button>
+  `).join('');
+}
+
+function irPagina(p) {
+  paginaAtual = p;
+  const ini = (p-1)*POR_PAGINA;
+  buildList('articleList', artigosVisiveis.slice(ini, ini+POR_PAGINA));
+  buildPaginacao();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// FILTROS
+// ══════════════════════════════════════════════════════════════════════════════
+function filtrarCat(cat, btn) {
+  document.querySelectorAll('#filtrosRapidos .filtro-btn').forEach(b => b.classList.remove('ativo'));
+  btn.classList.add('ativo');
+  artigosVisiveis = cat === 'todos' ? [...artigos] : artigos.filter(a => a.catSlug === cat);
+  paginaAtual = 1;
+  buildList('articleList', artigosVisiveis.slice(0, POR_PAGINA));
+  buildPaginacao();
+}
+
+function reordenar(val) {
+  if (val === 'recente') artigosVisiveis.sort((a,b) => b.id - a.id);
+  if (val === 'antigo')  artigosVisiveis.sort((a,b) => a.id - b.id);
+  if (val === 'titulo')  artigosVisiveis.sort((a,b) => a.titulo.localeCompare(b.titulo));
+  paginaAtual = 1;
+  buildList('articleList', artigosVisiveis.slice(0, POR_PAGINA));
+  buildPaginacao();
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// ARTIGO — OPEN / CLOSE (busca corpo completo da API pelo slug)
+// ══════════════════════════════════════════════════════════════════════════════
+async function openArtigo(id) {
+  const a = artigos.find(x => x.id === id);
+  if (!a) return;
+
+  // Mostrar dados básicos imediatamente
+  document.getElementById('viewCat').textContent = a.categoria;
+  document.getElementById('viewTitulo').textContent = a.titulo;
+  document.getElementById('bcCat').textContent = a.categoria;
+  document.getElementById('bcTitulo').textContent = a.titulo.slice(0,40)+'…';
+  document.getElementById('viewMeta').textContent = `${a.autor} · ${a.data}`;
+  document.getElementById('viewCorpo').innerHTML = '<p style="color:var(--texto-sec);font-size:0.9rem">A carregar…</p>';
+  document.getElementById('viewTags').innerHTML = (a.tags||[]).map(t =>
+    `<span class="artigo-tag" onclick="pesquisarChip('${t}')">${t}</span>`
+  ).join('');
+
+  document.getElementById('mainContent').style.display = 'none';
+  const av = document.getElementById('artigoView');
+  av.classList.add('aberto');
+  window.scrollTo({top:0, behavior:'smooth'});
+
+  // Buscar corpo completo via API
+  try {
+    const dados = await apiGet(`/public/contents/${a.slug}`);
+    const corpo = dados.body || '<p>Conteúdo sem corpo.</p>';
+    document.getElementById('viewCorpo').innerHTML = corpo;
+
+    // Índice automático
+    const corpoEl = document.getElementById('viewCorpo');
+    const h2s = corpoEl.querySelectorAll('h2');
+    if (h2s.length > 1) {
+      h2s.forEach((h,i) => h.id = `sec-${i}`);
+      document.getElementById('indiceList').innerHTML = Array.from(h2s).map((h,i) =>
+        `<li onclick="document.getElementById('sec-${i}').scrollIntoView({behavior:'smooth'})">${h.textContent}</li>`
+      ).join('');
+      document.getElementById('artigoIndice').style.display = 'block';
+    } else {
+      document.getElementById('artigoIndice').style.display = 'none';
+    }
+  } catch (err) {
+    document.getElementById('viewCorpo').innerHTML = `<p style="color:var(--vermelho)">Erro ao carregar conteúdo: ${err.message}</p>`;
+  }
+}
+
+function fecharArtigo() {
+  document.getElementById('artigoView').classList.remove('aberto');
+  document.getElementById('mainContent').style.display = 'block';
+  if (modoLeitura) toggleModoLeitura();
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// NAV
+// ══════════════════════════════════════════════════════════════════════════════
+function navClick(btn, slug) {
+  fecharArtigo();
+  fecharPesquisa();
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('ativo'));
+  btn.classList.add('ativo');
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('ativo'));
+  const tab = document.getElementById('tab-' + slug);
+  if (tab) tab.classList.add('ativo');
+  if (slug === 'admin') {
+    document.getElementById('carouselSection').style.display = 'none';
+    if (!adminLogado) adminSeccao('login');
+    else adminSeccao('dashboard');
+  } else {
+    document.getElementById('carouselSection').style.display = 'block';
+  }
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function mostrarView(slug) {
+  const btn = Array.from(document.querySelectorAll('nav button')).find(b => b.getAttribute('onclick')?.includes(`'${slug}'`));
+  if (btn) navClick(btn, slug);
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// PESQUISA (usa endpoint /public/search/contents da API)
+// ══════════════════════════════════════════════════════════════════════════════
+function abrirPesquisa() {
+  document.getElementById('pesquisaOverlay').classList.add('aberto');
+  setTimeout(() => document.getElementById('pesquisaInput').focus(), 50);
+}
+function fecharPesquisa() {
+  document.getElementById('pesquisaOverlay').classList.remove('aberto');
+  document.getElementById('pesquisaInput').value = '';
+  document.getElementById('pesquisaResultados').innerHTML = `
+    <div class="pesquisa-sugestoes" id="pesquisaSugestoes">
+      <div class="pesquisa-label">Populares</div>
+      ${ ['maoísmo','imperialismo','guerra popular','dialética','marx','lenine','mao tsé-tung','palestina'].map(t =>
+        `<span class="pesquisa-chip" onclick="pesquisarChip('${t}')">${t}</span>`
+      ).join('') }
+    </div>`;
+}
+function fecharPesquisaOutside(e) {
+  if (e.target === document.getElementById('pesquisaOverlay')) fecharPesquisa();
+}
+function pesquisaKey(e) { if (e.key === 'Escape') fecharPesquisa(); }
+
+function pesquisarChip(q) {
+  document.getElementById('pesquisaInput').value = q;
+  doPesquisa(q);
+}
+
+let pesquisaDebounce = null;
+async function doPesquisa(q) {
+  const res = document.getElementById('pesquisaResultados');
+  if (!q.trim()) {
+    fecharPesquisa();
+    return;
+  }
+
+  res.innerHTML = `<div style="padding:24px;text-align:center;color:var(--texto-sec);font-size:0.85rem">A pesquisar…</div>`;
+
+  clearTimeout(pesquisaDebounce);
+  pesquisaDebounce = setTimeout(async () => {
+    try {
+      const data = await apiGet(`/public/search/contents?q=${encodeURIComponent(q)}&page_size=20`);
+      const found = (data.items || []).map(normalizarConteudo);
+
+      if (found.length === 0) {
+        res.innerHTML = `<div class="pesquisa-vazio">Nenhum resultado encontrado para "<strong>${q}</strong>".</div>`;
+        return;
+      }
+      res.innerHTML = `
+        <div style="padding:8px 20px;font-size:0.75rem;color:var(--texto-sec);border-bottom:1px solid var(--borda)">
+          ${found.length} resultado(s) para "<strong>${q}</strong>"
+        </div>
+        ${found.map(a => `
+          <div class="pesquisa-item" onclick="fecharPesquisa();openArtigo(${a.id})">
+            <span class="pesquisa-item-cat">${a.categoria}</span>
+            <div>
+              <div class="pesquisa-item-titulo">${destacar(a.titulo, q)}</div>
+              <div class="pesquisa-item-meta">${a.autor} · ${a.data}</div>
+            </div>
+          </div>
+        `).join('')}
+      `;
+    } catch (err) {
+      // Fallback: pesquisa local nos artigos já carregados
+      const term = q.toLowerCase();
+      const found = artigos.filter(a =>
+        a.titulo.toLowerCase().includes(term) ||
+        a.excerto.toLowerCase().includes(term) ||
+        (a.tags||[]).some(t => t.toLowerCase().includes(term))
+      );
+      if (found.length === 0) {
+        res.innerHTML = `<div class="pesquisa-vazio">Nenhum resultado encontrado para "<strong>${q}</strong>".</div>`;
+        return;
+      }
+      res.innerHTML = `
+        <div style="padding:8px 20px;font-size:0.75rem;color:var(--texto-sec);border-bottom:1px solid var(--borda)">
+          ${found.length} resultado(s) (pesquisa local) para "<strong>${q}</strong>"
+        </div>
+        ${found.map(a => `
+          <div class="pesquisa-item" onclick="fecharPesquisa();openArtigo(${a.id})">
+            <span class="pesquisa-item-cat">${a.categoria}</span>
+            <div>
+              <div class="pesquisa-item-titulo">${destacar(a.titulo, q)}</div>
+              <div class="pesquisa-item-meta">${a.autor} · ${a.data}</div>
+            </div>
+          </div>
+        `).join('')}
+      `;
+    }
+  }, 300);
+}
+
+function destacar(txt, q) {
+  const re = new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi');
+  return txt.replace(re, '<mark style="background:#fff3b0;padding:0 1px">$1</mark>');
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// LEITURA
+// ══════════════════════════════════════════════════════════════════════════════
+function setFonte(s) { document.body.dataset.fontSize = s; }
+function toggleModoLeitura() {
+  modoLeitura = !modoLeitura;
+  document.body.classList.toggle('modo-leitura', modoLeitura);
+}
+function copiarLink() {
+  navigator.clipboard?.writeText(window.location.href).then(() => toast('Link copiado!', 'sucesso'));
+}
+function partilhar() {
+  if (navigator.share) navigator.share({title: document.getElementById('viewTitulo').textContent, url: window.location.href});
+  else copiarLink();
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// VERBETES (carregados da API)
+// ══════════════════════════════════════════════════════════════════════════════
+function buildVerbetes() {
+  const letras = [...new Set(verbetes.map(v => v.letra))].sort();
+  document.getElementById('verbetesIndice').innerHTML = letras.map(l => `
+    <div class="alfa-grupo">
+      <div class="alfa-letra">${l}</div>
+      ${verbetes.filter(v => v.letra === l).map(v =>
+        `<a class="alfa-item" onclick="scrollToVerbete(${v.id})">${v.titulo}</a>`
+      ).join('')}
+    </div>
+  `).join('');
+  renderVerbetes(verbetes);
+}
+
+function renderVerbetes(list) {
+  document.getElementById('verbetesList').innerHTML = list.map(v => `
+    <div class="verbete-card" id="verbete-${v.id}" style="margin-bottom:20px">
+      ${v.destaque ? '<span class="verbete-destaque">⭐ Destaque</span>' : ''}
+      <h2 class="verbete-titulo">${v.titulo}</h2>
+      <div class="verbete-resumo">
+        <strong>Resumo</strong>
+        ${v.resumo}
+        ${v.datas.length ? `<div style="margin-top:10px;font-size:0.8rem;color:var(--texto-sec)">${v.datas.map(d=>`<div style="padding:2px 0">• ${d}</div>`).join('')}</div>` : ''}
+      </div>
+      <div class="verbete-corpo">${v.corpo}</div>
+      ${v.links.length ? `
+        <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--borda);font-size:0.8rem;color:var(--texto-sec)">
+          Ver também: ${v.links.map(l=>`<span class="verbete-link" onclick="scrollToVerbete(${l.id})">${l.titulo}</span>`).join(', ')}
+        </div>
+      ` : ''}
+    </div>
+  `).join('');
+}
+
+function scrollToVerbete(id) {
+  document.getElementById(`verbete-${id}`)?.scrollIntoView({behavior:'smooth', block:'start'});
+}
+function abrirVerbete(id) { scrollToVerbete(id); }
+
+function filtrarVerbetes(q) {
+  const list = q ? verbetes.filter(v =>
+    v.titulo.toLowerCase().includes(q.toLowerCase()) ||
+    v.resumo.toLowerCase().includes(q.toLowerCase())
+  ) : verbetes;
+  renderVerbetes(list);
+}
+function filtrarVerbetesCat(cat, btn) {
+  document.querySelectorAll('#tab-verbetes .filtro-btn').forEach(b => b.classList.remove('ativo'));
+  btn.classList.add('ativo');
+  const list = cat === 'todos' ? verbetes : verbetes.filter(v => v.cat === cat);
+  renderVerbetes(list);
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// ADMIN — AUTENTICAÇÃO (via API JWT)
+// ══════════════════════════════════════════════════════════════════════════════
+const ADMIN_SECTIONS = ['login','dashboard','conteudos','novoConteudo','categorias','tags','verbetesAdmin','media','configuracoes'];
+
+function adminSeccao(s) {
+  ADMIN_SECTIONS.forEach(n => {
+    const el = document.getElementById('admin' + n.charAt(0).toUpperCase() + n.slice(1));
+    if (el) el.style.display = 'none';
+  });
+  const target = document.getElementById('admin' + s.charAt(0).toUpperCase() + s.slice(1));
+  if (target) target.style.display = 'block';
+}
+
+async function doLogin() {
+  const email = document.getElementById('loginEmail').value;
+  const pass  = document.getElementById('loginPass').value;
+  const erro  = document.getElementById('loginErro');
+  if (!email || !pass) { erro.style.display='block'; erro.textContent='Preencha todos os campos.'; return; }
+
+  try {
+    const data = await apiPost('/auth/login', { email, password: pass });
+    authToken = data.access_token;
+    localStorage.setItem('auth_token', authToken);
+    adminLogado = true;
+    erro.style.display = 'none';
+    adminSeccao('dashboard');
+    toast('Bem-vindo ao painel de administração.', 'sucesso');
+    // Recarregar tabelas admin
+    buildAdminRecentTable();
+    buildAdminConteudosTable();
+  } catch (err) {
+    erro.style.display = 'block';
+    erro.textContent = 'Credenciais inválidas.';
+  }
+}
+
+function doLogout() {
+  authToken = null;
+  localStorage.removeItem('auth_token');
+  adminLogado = false;
+  adminSeccao('login');
+  toast('Sessão terminada.', '');
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// ADMIN — TABELAS (carregam dados da API com token)
+// ══════════════════════════════════════════════════════════════════════════════
+async function buildAdminRecentTable() {
+  const t = document.getElementById('adminRecentTable');
+  if (!t) return;
+
+  if (!adminLogado) return;
+
+  try {
+    const data = await apiGet('/content?page=1&page_size=5');
+    const list = (data.items || []).map(normalizarConteudo);
+    t.innerHTML = `
+      <thead><tr><th>Título</th><th>Categoria</th><th>Autor</th><th>Estado</th><th>Acções</th></tr></thead>
+      <tbody>${list.map(a => `
+        <tr>
+          <td style="max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${a.titulo}</td>
+          <td>${a.categoria}</td>
+          <td>${a.autor}</td>
+          <td><span class="badge-pub ${a.is_published?'sim':'nao'}">${a.is_published?'Publicado':'Rascunho'}</span></td>
+          <td>
+            <button class="btn-tabela" onclick="adminEditar(${a.id})">Editar</button>
+            <button class="btn-tabela apagar" onclick="adminApagarConfirm(${a.id})">Apagar</button>
+          </td>
+        </tr>
+      `).join('')}</tbody>
+    `;
+  } catch (err) {
+    t.innerHTML = `<thead><tr><th>Erro ao carregar conteúdos</th></tr></thead><tbody><tr><td>${err.message}</td></tr></tbody>`;
+  }
+}
+
+async function buildAdminConteudosTable(filtro) {
+  const t = document.getElementById('adminConteudosTable');
+  if (!t || !adminLogado) return;
+
+  try {
+    const qs = filtro ? `?page=1&page_size=50&title=${encodeURIComponent(filtro)}` : '?page=1&page_size=50';
+    const data = await apiGet(`/content${qs}`);
+    const list = (data.items || []).map(normalizarConteudo);
+    t.innerHTML = `
+      <thead><tr><th>Título</th><th>Categoria</th><th>Autor</th><th>Data</th><th>Estado</th><th>Acções</th></tr></thead>
+      <tbody>${list.map(a => `
+        <tr>
+          <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${a.titulo}</td>
+          <td>${a.categoria}</td>
+          <td>${a.autor}</td>
+          <td>${a.data}</td>
+          <td><span class="badge-pub ${a.is_published?'sim':'nao'}">${a.is_published?'Publicado':'Rascunho'}</span></td>
+          <td>
+            <button class="btn-tabela" onclick="adminEditar(${a.id})">Editar</button>
+            <button class="btn-tabela apagar" onclick="adminApagarConfirm(${a.id})">Apagar</button>
+          </td>
+        </tr>
+      `).join('')}</tbody>
+    `;
+  } catch (err) {
+    t.innerHTML = `<thead><tr><th colspan="6" style="color:var(--vermelho)">Erro: ${err.message}</th></tr></thead>`;
+  }
+}
+
+function filtrarAdminTabela(q) { buildAdminConteudosTable(q); }
+
+async function adminEditar(id) {
+  if (!adminLogado) return;
+  // Buscar conteúdo completo via API de admin
+  try {
+    const a = await apiGet(`/content/${id}`);
+    editandoId = id;
+    document.getElementById('formTitulo').textContent = 'Editar Conteúdo';
+    document.getElementById('fTitulo').value = a.title || '';
+    document.getElementById('fAutor').value = a.author || '';
+    document.getElementById('fExcerto').value = a.excerpt || '';
+    document.getElementById('fTags').value = (a.tags||[]).map(t=>t.name).join(', ');
+    document.getElementById('fCorpo').innerHTML = a.body || '';
+    adminSeccao('novoConteudo');
+  } catch (err) {
+    toast('Erro ao carregar conteúdo: ' + err.message, 'erro');
+  }
+}
+
+async function adminApagarConfirm(id) {
+  abrirModal('Apagar Conteúdo', 'Esta acção é irreversível. Tens a certeza que queres apagar este conteúdo?', async () => {
+    try {
+      await apiDelete(`/content/${id}`);
+      fecharModal();
+      toast('Conteúdo apagado.', 'erro');
+      await buildAdminConteudosTable();
+      await buildAdminRecentTable();
+      // Remover do estado local também
+      artigos = artigos.filter(a => a.id !== id);
+      artigosVisiveis = artigosVisiveis.filter(a => a.id !== id);
+      buildList('articleList', artigosVisiveis.slice(0, POR_PAGINA));
+    } catch (err) {
+      fecharModal();
+      toast('Erro ao apagar: ' + err.message, 'erro');
+    }
+  });
+}
+
+async function guardarConteudo() {
+  const titulo  = document.getElementById('fTitulo').value.trim();
+  const corpo   = document.getElementById('fCorpo').innerHTML.trim();
+  const autor   = document.getElementById('fAutor').value.trim();
+  const excerto = document.getElementById('fExcerto').value.trim();
+  const tagsStr = document.getElementById('fTags').value;
+
+  if (!titulo || !corpo) { toast('Título e corpo são obrigatórios.', 'erro'); return; }
+
+  const payload = {
+    title: titulo,
+    body: corpo,
+    author: autor || 'Redação',
+    excerpt: excerto,
+    is_published: true,
+  };
+
+  try {
+    if (editandoId) {
+      await apiPut(`/content/${editandoId}`, payload);
+      toast('Conteúdo actualizado com sucesso!', 'sucesso');
+    } else {
+      await apiPost('/content', payload);
+      toast('Conteúdo criado com sucesso!', 'sucesso');
+    }
+
+    // Recarregar dados
+    await carregarDados();
+    buildList('articleList', artigosVisiveis.slice(0, POR_PAGINA));
+    await buildAdminConteudosTable();
+    await buildAdminRecentTable();
+    editandoId = null;
+    setTimeout(() => adminSeccao('conteudos'), 800);
+  } catch (err) {
+    toast('Erro ao guardar: ' + err.message, 'erro');
+  }
+}
+
+function previewConteudo() {
+  const titulo = document.getElementById('fTitulo').value || '(sem título)';
+  const corpo  = document.getElementById('fCorpo').innerHTML;
+  document.getElementById('viewTitulo').textContent = titulo;
+  document.getElementById('viewCorpo').innerHTML = corpo;
+  document.getElementById('viewCat').textContent = 'Pré-visualização';
+  document.getElementById('viewMeta').textContent = '';
+  document.getElementById('viewTags').innerHTML = '';
+  document.getElementById('bcCat').textContent = 'Admin';
+  document.getElementById('bcTitulo').textContent = titulo.slice(0,40);
+  document.getElementById('artigoIndice').style.display = 'none';
+  document.getElementById('mainContent').style.display = 'none';
+  document.getElementById('artigoView').classList.add('aberto');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// Autosave (apenas visual — guarda mesmo ao clicar em Guardar)
+document.addEventListener('input', e => {
+  if (e.target.id === 'fCorpo' || e.target.id === 'fTitulo') {
+    clearTimeout(autoSaveTimer);
+    const msg = document.getElementById('autoSaveMsg');
+    autoSaveTimer = setTimeout(() => {
+      if(msg) { msg.textContent = 'Rascunho por guardar.'; setTimeout(()=>msg.textContent='',3000); }
+    }, 2000);
+  }
+});
+
+// ══════════════════════════════════════════════════════════════════════════════
+// EDITOR
+// ══════════════════════════════════════════════════════════════════════════════
+function execCmd(cmd) { document.getElementById('fCorpo').focus(); document.execCommand(cmd, false, null); }
+function insertBlockquote() {
+  const sel = window.getSelection();
+  const txt = sel.toString() || 'Citação';
+  document.execCommand('insertHTML', false, `<blockquote>${txt}</blockquote>`);
+}
+function insertH2() { document.execCommand('insertHTML', false, '<h2>Título de secção</h2>'); }
+function insertH3() { document.execCommand('insertHTML', false, '<h3>Subtítulo</h3>'); }
+
+// ══════════════════════════════════════════════════════════════════════════════
+// CONFIGURAÇÕES
+// ══════════════════════════════════════════════════════════════════════════════
+function previewConfig() {
+  const t = document.getElementById('cfgTitulo').value;
+  const s = document.getElementById('cfgSub').value;
+  document.getElementById('cfgPreviewTit').textContent = t;
+  document.getElementById('cfgPreviewSub').textContent = s;
+}
+function guardarConfig() {
+  const t = document.getElementById('cfgTitulo').value;
+  const s = document.getElementById('cfgSub').value;
+  document.getElementById('siteTitle').textContent = t;
+  document.getElementById('siteSub').textContent = s;
+  toast('Configurações guardadas!', 'sucesso');
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// MODAL
+// ══════════════════════════════════════════════════════════════════════════════
+let modalCb = null;
+function abrirModal(titulo, texto, cb) {
+  document.getElementById('modalTitulo').textContent = titulo;
+  document.getElementById('modalTexto').textContent = texto;
+  modalCb = cb;
+  document.getElementById('modalConfirmar').onclick = cb;
+  document.getElementById('modalOverlay').classList.add('aberto');
+}
+function fecharModal() { document.getElementById('modalOverlay').classList.remove('aberto'); modalCb = null; }
+function fecharModalOutside(e) { if (e.target === document.getElementById('modalOverlay')) fecharModal(); }
+
+// ══════════════════════════════════════════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════════════════════════════════════════
+function toast(msg, tipo) {
+  const el = document.createElement('div');
+  el.className = `toast ${tipo}`;
+  el.textContent = msg;
+  document.getElementById('toastArea').appendChild(el);
+  setTimeout(() => el.remove(), 3500);
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// DARK MODE
+// ══════════════════════════════════════════════════════════════════════════════
+function toggleDark() {
+  document.body.classList.toggle('dark');
+  const dark = document.body.classList.contains('dark');
+  localStorage.setItem('dark', dark);
+}
+if (localStorage.getItem('dark') === 'true') document.body.classList.add('dark');
+
+// ══════════════════════════════════════════════════════════════════════════════
+// KEYBOARD
+// ══════════════════════════════════════════════════════════════════════════════
+document.addEventListener('keydown', e => {
+  if (e.key === '/' && !['INPUT','TEXTAREA'].includes(e.target.tagName) && e.target.contentEditable !== 'true') {
+    e.preventDefault();
+    abrirPesquisa();
+  }
+  if (e.key === 'Escape') {
+    fecharPesquisa();
+    fecharModal();
+  }
+});
+</script>
+</body>
+</html>
